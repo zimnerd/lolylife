@@ -1,0 +1,88 @@
+<ion-header mode="ios" mode='ios'>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="close(false)">
+      <ion-back-button defaultHref="{{'/'+path}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{"Login" | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+    <div class="login1">
+      <ion-card mode="{{settings.settings.mode}}">
+      <div class="form" *ngIf="loginTab">
+            <p><ion-text color="medium">-- {{"continue with" | translate}} --</ion-text></p>
+            <ion-grid>
+            <ion-row>
+            <ion-col size="6">
+            <ion-button expand="block" shape="undefined" mode="ios" fill="solid" color="google" (click)="googleLogin()" [disabled]="googleLogingInn">
+            <ion-icon slot="start" name="logo-google"></ion-icon>{{"Google"| translate}}</ion-button>
+            <br/>
+            </ion-col>
+            <ion-col size="6">
+            <ion-button expand="block" shape="undefined" mode="ios" fill="solid" color="facebook" (click)="facebookLogin()" [disabled]="facebookLogingInn">
+            <ion-icon slot="start" name="logo-facebook"></ion-icon>{{"Facebook"| translate}}</ion-button>
+            </ion-col>
+            </ion-row>
+            </ion-grid>
+            <p><ion-text color="medium">-- {{"or use email address" | translate}} --</ion-text></p>
+            <ion-list>
+            <form [formGroup]="form">
+              <ion-item mode="md">
+              <ion-icon slot="start" name="person" mode="md"></ion-icon>
+              <ion-input type="text" formControlName="username" placeholder="Email/Username"></ion-input>
+              </ion-item>
+              <ion-item mode="md">
+              <ion-icon slot="start" name="key" mode="md"></ion-icon>
+              <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
+              </ion-item>
+             </form>
+            </ion-list>
+            <ion-button shape="undefined" fill="solid" color="{{settings.theme.button}}" expand="block" [disabled]="disableSubmit" (click)="onSubmit()">{{"Login"| translate}}</ion-button>
+            <ion-button color="{{settings.theme.button}}" expand="full" fill="clear" (click)="forgotton()">{{"Forgot Password"| translate}}?</ion-button>
+            <br/>
+            <ion-button color="{{settings.theme.button}}" expand="full" fill="clear" (click)="loginTab = !loginTab">{{"Register"| translate}}</ion-button>
+            <div class="errors" *ngIf="errors">
+              <div *ngFor="let error of errors | keys" style="text-align: center; padding-top: 10px;">
+                <ion-label color="danger" [innerHTML]="error.value"></ion-label>
+              </div>
+            </div>
+      </div>
+
+
+
+  <div class="form" *ngIf="!loginTab">
+  <ion-list>
+    <form [formGroup]="formRegister">
+    <ion-item lines="full">
+    <ion-input required type="text" formControlName="first_name" placeholder="First Name"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+    <ion-input required type="text" formControlName="last_name" placeholder="Last Name"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+    <ion-input required type="text" formControlName="phone" placeholder="Phone"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+    <ion-input required type="email" formControlName="email" placeholder="Email"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+    <ion-input required type="password" formControlName="password" placeholder="Password"></ion-input>
+    </ion-item>
+  </form>
+  </ion-list>
+   <ion-button color="{{settings.theme.button}}" expand="block" fill="solid" [disabled]="!formRegister.valid || disableSubmit" (click)="onRegister()">{{"Register" | translate}}</ion-button>
+    <br/>
+   <ion-button color="{{settings.theme.button}}" expand="full" fill="clear" (click)="loginTab = !loginTab">{{"Login"| translate}}</ion-button>
+  <div class="errors" *ngIf="errorsRegister">
+    <div *ngFor="let error of errorsRegister | keys" style="text-align: center; padding-top: 20px;">
+      <ion-label color="danger" class="error" [innerHTML]="error.value"></ion-label>
+    </div>
+   </div>
+  </div>
+
+
+      </ion-card>
+    </div>
+
+</ion-content>
