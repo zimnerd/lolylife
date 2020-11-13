@@ -18,8 +18,8 @@ export class AccountPage {
     toggle: any;
     constructor(public modalController: ModalController, private statusBar: StatusBar, private config: Config, public api: ApiService, public navCtrl: NavController, public settings: Settings, public platform: Platform, private appRate: AppRate, private emailComposer: EmailComposer, private socialSharing: SocialSharing, public routerOutlet: IonRouterOutlet) {}
     goTo(path) {
+        console.log(path);
         this.navCtrl.navigateForward(path);
-
     }
     async log_out() {
         this.settings.customer.id = undefined;
@@ -102,5 +102,4 @@ export class AccountPage {
       modal.present();
       const { data } = await modal.onWillDismiss();
     }
-    
 }

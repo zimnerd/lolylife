@@ -24,7 +24,7 @@
 
 <!-- Drop down type category block -->
 <div *ngFor="let main of data.mainCategories; let i = index" class="category-container">
-  <ion-grid class="categories-card5" no-padding>
+  <ion-grid class="categories-card5" no-padding *ngIf="main.name !='Uncategorised'">
   <ion-row><ion-col class="ion-text-center">
   <ion-item lines="none" button="true" (click)="showSubCategory(i)" detail="false">
     <ion-thumbnail slot="start">

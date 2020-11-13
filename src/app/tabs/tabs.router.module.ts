@@ -1,51 +1,49 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { TabsPage } from './tabs.page';
-import { HomePage } from './../home/home.page';
-import { CartPage } from './../cart/cart.page';
-import { CategoriesPage } from './../categories/categories.page';
-import { SearchPage } from './../search/search.page';
-import { ProductsPage } from './../products/products.page';
-import { ProductPage } from './../product/product.page';
-import { ReviewPage } from './../review/review.page';
-import { PostPage } from './../post/post.page';
+import {TabsPage} from './tabs.page';
+import {HomePage} from './../home/home.page';
+import {CartPage} from './../cart/cart.page';
+import {CategoriesPage} from './../categories/categories.page';
+import {SearchPage} from './../search/search.page';
+import {ProductsPage} from './../products/products.page';
+import {ProductPage} from './../product/product.page';
+import {ReviewPage} from './../review/review.page';
+import {PostPage} from './../post/post.page';
 //import { ContactPage } from './../contact/contact.page';
-import { AccountPage } from './../account/account.page';
-import { CheckoutAddressPage } from './../checkout/address/address.page';
-import { CheckoutPage } from './../checkout/checkout/checkout.page';
-import { OrderSummaryPage } from './../checkout/order-summary/order-summary.page';
+import {AccountPage} from './../account/account.page';
+import {CheckoutAddressPage} from './../checkout/address/address.page';
+import {CheckoutPage} from './../checkout/checkout/checkout.page';
 
-import { AddressPage } from './../account/address/address.page';
-import { BlogPage } from './../account/blog/blog.page';
-import { BlogsPage } from './../account/blogs/blogs.page';
-import { EditAddressPage } from './../account/edit-address/edit-address.page';
-import { ForgottenPage } from './../account/forgotten/forgotten.page';
-import { LoginPage } from './../account/login/login.page';
-import { MapPage } from './../account/map/map.page';
-import { OrderPage } from './../account/order/order.page';
-import { OrdersPage } from './../account/orders/orders.page';
-import { PointsPage } from './../account/points/points.page';
-import { RegisterPage } from './../account/register/register.page';
-import { SettingPage } from './../account/setting/setting.page';
-import { CurrenciesPage } from './../account/currencies/currencies.page';
-import { WalletPage } from './../account/wallet/wallet.page';
-import { WishlistPage } from './../account/wishlist/wishlist.page';
+import {AddressPage} from './../account/address/address.page';
+import {BlogPage} from './../account/blog/blog.page';
+import {BlogsPage} from './../account/blogs/blogs.page';
+import {EditAddressPage} from './../account/edit-address/edit-address.page';
+import {ForgottenPage} from './../account/forgotten/forgotten.page';
+import {LoginPage} from './../account/login/login.page';
+import {MapPage} from './../account/map/map.page';
+import {OrderPage} from './../account/order/order.page';
+import {OrdersPage} from './../account/orders/orders.page';
+import {PointsPage} from './../account/points/points.page';
+import {RegisterPage} from './../account/register/register.page';
+import {SettingPage} from './../account/setting/setting.page';
+import {CurrenciesPage} from './../account/currencies/currencies.page';
+import {WalletPage} from './../account/wallet/wallet.page';
+import {WishlistPage} from './../account/wishlist/wishlist.page';
 
 //Vendor
-import { EditOrderPage } from './../vendor/edit-order/edit-order.page';
-import { EditProductPage } from './../vendor/edit-product/edit-product.page';
-import { EditVariationPage } from './../vendor/edit-variation/edit-variation.page';
-import { OrderListPage } from './../vendor/order-list/order-list.page';
-import { OrderNoteListPage } from './../vendor/order-note-list/order-note-list.page';
-import { ProductListPage } from './../vendor/product-list/product-list.page';
-import { VendorInfoPage } from './../vendor/vendor-info/vendor-info.page';
-import { VendorListPage } from './../vendor/vendor-list/vendor-list.page';
+import {EditOrderPage} from './../vendor/edit-order/edit-order.page';
+import {EditProductPage} from './../vendor/edit-product/edit-product.page';
+import {EditVariationPage} from './../vendor/edit-variation/edit-variation.page';
+import {OrderListPage} from './../vendor/order-list/order-list.page';
+import {ProductListPage} from './../vendor/product-list/product-list.page';
+import {VendorInfoPage} from '../vendor/vendor-info/vendor-info.page';
+import {VendorListPage} from './../vendor/vendor-list/vendor-list.page';
 
-import { CategoryPage } from './../vendor/product-add/category/category.page';
-import { DetailsPage } from './../vendor/product-add/details/details.page';
-import { PhotosPage } from './../vendor/product-add/photos/photos.page';
-import { SubcategoryPage } from './../vendor/product-add/subcategory/subcategory.page';
+import {CategoryPage} from './../vendor/product-add/category/category.page';
+import {DetailsPage} from './../vendor/product-add/details/details.page';
+import {PhotosPage} from './../vendor/product-add/photos/photos.page';
+import {SubcategoryPage} from './../vendor/product-add/subcategory/subcategory.page';
 
 const routes: Routes = [
   {
@@ -58,6 +56,10 @@ const routes: Routes = [
           {
             path: '',
             component: HomePage,
+          },
+          {
+            path: 'stores',
+            component: VendorListPage
           },
           {
             path: 'products/:id',
@@ -121,6 +123,20 @@ const routes: Routes = [
             component: PostPage
           }
         ]
+      },
+      {
+        path: 'events',
+        loadChildren: () => import('../events/events.module').then(m => m.EventsPageModule)
+      },
+      {
+        path: 'media',
+        loadChildren: () => import('../media/media.module').then(m => m.MediaPageModule)
+      }, {
+        path: 'event/:id',
+        loadChildren: () => import('../event/event.module').then(m => m.EventPageModule)
+      }, {
+        path: 'playlist/:id',
+        loadChildren: () => import('../media/playlist/playlist.module').then(m => m.PlaylistPageModule)
       },
       {
         path: 'categories',
@@ -265,16 +281,16 @@ const routes: Routes = [
               },
               {
                 path: 'edit-address',
-                component:EditAddressPage
+                component: EditAddressPage
               }
             ]
           },
           {
-          path: 'register',
+            path: 'register',
             component: RegisterPage
           },
           {
-          path: 'points',
+            path: 'points',
             component: PointsPage
           },
           {
@@ -370,72 +386,72 @@ const routes: Routes = [
           {
             path: 'vendor-orders',
             children: [
-                {
-                  path: '',
-                  component: OrderListPage
-                },
-                {
-                  path: 'edit-order/:id',
-                  component: EditOrderPage
-                },
-                {
-                  path: 'view-order/:id',
-                  component: OrderPage
-                }
-              ]
+              {
+                path: '',
+                component: OrderListPage
+              },
+              {
+                path: 'edit-order/:id',
+                component: EditOrderPage
+              },
+              {
+                path: 'view-order/:id',
+                component: OrderPage
+              }
+            ]
           },
           {
             path: 'vendor-products',
             children: [
-                {
-                  path: '',
-                  component: ProductListPage
-                },
-                {
-                  path: 'edit-product/:id',
-                  children: [
-                    {
-                      path: '',
-                      component: EditProductPage
-                    },
-                    {
-                      path: 'edit-variation-product/:id',
-                      component: EditVariationPage
-                    }
-                  ]
-                },
-                {
-                  path: 'view-product/:id',
-                  component: ProductPage
-                }
-              ]
+              {
+                path: '',
+                component: ProductListPage
+              },
+              {
+                path: 'edit-product/:id',
+                children: [
+                  {
+                    path: '',
+                    component: EditProductPage
+                  },
+                  {
+                    path: 'edit-variation-product/:id',
+                    component: EditVariationPage
+                  }
+                ]
+              },
+              {
+                path: 'view-product/:id',
+                component: ProductPage
+              }
+            ]
           },
 
           {
             path: 'add-products',
             children: [
-                {
-                  path: '',
-                  component: CategoryPage
-                },
-                {
-                  path: 'subcategory/:id',
-                  component: SubcategoryPage
-                },
-                {
-                  path: 'details/:id',
-                   children: [
-                    {
-                      path: '',
-                      component: DetailsPage
-                    },
-                    {
-                      path: 'photos',
-                      component: PhotosPage
-                    }
-                  ]
-                }
-              ]
+              {
+                path: '',
+                component: CategoryPage
+              },
+              {
+                path: 'subcategory/:id',
+                component: SubcategoryPage
+              },
+              {
+                path: 'details/:id',
+                children: [
+                  {
+                    path: '',
+                    component: DetailsPage
+                  },
+                  {
+                    path: 'photos',
+                    component: PhotosPage
+                  }
+                ]
+              }
+            ]
           },
         ]
       },
@@ -458,7 +474,7 @@ const routes: Routes = [
               {
                 path: '',
                 component: ProductsPage
-              }, 
+              },
               {
                 path: 'product/:id',
                 children: [
@@ -516,4 +532,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule {
+}

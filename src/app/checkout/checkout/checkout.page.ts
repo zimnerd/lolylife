@@ -40,7 +40,7 @@ export class CheckoutPage implements OnInit {
         this.checkoutData.form['woocommerce-process-checkout-nonce'] = this.checkoutData.form._wpnonce;
         this.checkoutData.form['wc-ajax'] = 'update_order_review';
         this.setOldWooCommerceVersionData();
-        await this.api.updateOrderReview('update_order_review', this.checkoutData.form).then(res => {
+        await this.api.updateOrderReview('update_order_review', this.checkoutData.form).subscribe(res => {
             this.orderReview = res;
             if(this.orderReview.payment && this.orderReview.payment.stripe) {
                 this.stripe = Stripe(this.orderReview.payment.stripe.publishable_key);
@@ -58,7 +58,7 @@ export class CheckoutPage implements OnInit {
         this.checkoutData.form['woocommerce-process-checkout-nonce'] = this.checkoutData.form._wpnonce;
         this.checkoutData.form['wc-ajax'] = 'update_order_review';
         this.setOldWooCommerceVersionData();
-        await this.api.updateOrderReview('update_order_review', this.checkoutData.form).then(res => {
+        await this.api.updateOrderReview('update_order_review', this.checkoutData.form).subscribe(res => {
             this.handleData(res);
         }, err => {
             console.log(err);
@@ -199,7 +199,7 @@ export class CheckoutPage implements OnInit {
             var options = "location=no,hidden=yes,toolbar=yes";
             let browser = this.iab.create(this.results.redirect, '_blank', options);
             browser.on('loadstart').subscribe(data => {
-                if (data.url.indexOf('/order-pay/') != -1) {
+                if (data.url.indexOf('/order/process') != -1) {
                     browserActive = true;
                     browser.show();
                 }
@@ -212,14 +212,25 @@ export class CheckoutPage implements OnInit {
                     this.navCtrl.navigateRoot('/order-summary/' + this.orderId);
                     browser.hide();
                 }
-                else if (data.url.indexOf('type=error') != -1 || data.url.indexOf('Failed') != -1 || data.url.indexOf('cancel_order=true') != -1 || data.url.indexOf('cancelled') != -1) {
+                else if (data.url.indexOf('/order-received/') != -1) {
+                    if(this.orderId)
+                    this.navCtrl.navigateRoot('/order-summary/' + this.orderId);
+                    browser.hide();
+                }
+                else if (data.url.indexOf('cancelTransaction') != -1 || data.url.indexOf('type=error') != -1 || data.url.indexOf('Failed') != -1 || data.url.indexOf('cancel_order=true') != -1 || data.url.indexOf('cancelled') != -1) {
                     browser.close();
                     this.disableButton = false;
                 }
+                else if (data.url.indexOf('Your+payment+has+been+failed') != -1) {
+                    browser.close();
+                    this.navCtrl.navigateRoot('/order-summary/' + this.orderId);
+                    this.disableButton = false;
+                } 
                 else if (data.url.indexOf('Thank+you+for+your+order') != -1) {
                     browser.close();
+                    this.navCtrl.navigateRoot('/order-summary/' + this.orderId);
                     this.disableButton = false;
-                }     
+                }    
             });
             browser.on('exit').subscribe(data => {
                 this.disableButton = false;

@@ -7,7 +7,7 @@
    </ion-toolbar>
 </ion-header>
 <ion-content class="settings">
-   <div *ngIf="settings.languages.length">
+   <div *ngIf="settings?.languages && settings.languages.length">
       <ion-list >
          <ion-radio-group [(ngModel)]="config.lang" name="language" ngDefaultControl>
          <ion-item *ngFor="let item of settings.languages">

@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Settings } from './../../data/settings';
-import { HomePage} from '../../home/home.page';
 import { Config as IonicConfig } from '@ionic/angular';
 
 @Component({
@@ -14,7 +13,7 @@ import { Config as IonicConfig } from '@ionic/angular';
   styleUrls: ['./setting.page.scss'],
 })
 export class SettingPage {
-  constructor(public home: HomePage, public ionicConfig: IonicConfig, public router: Router, public settings: Settings, public navCtrl: NavController, public translateService: TranslateService, public nativeStorage: NativeStorage, public config: Config) { }
+  constructor(public ionicConfig: IonicConfig, public router: Router, public settings: Settings, public navCtrl: NavController, public translateService: TranslateService, public nativeStorage: NativeStorage, public config: Config) { }
     applyLanguage(){
       this.translateService.setDefaultLang(this.config.lang);
       if(this.config.lang == 'ar'){
@@ -29,7 +28,7 @@ export class SettingPage {
           () => console.log(),
           error => console.error(error)
       );
-      this.home.getBlocks();
+      window.dispatchEvent(new CustomEvent('app:update', {'detail': true}));
       this.navCtrl.pop();
     }
 }

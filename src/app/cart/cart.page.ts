@@ -76,15 +76,16 @@ export class CartPage {
         await this.api.postItem('remove_coupon', {
             coupon: coupon
         }).then(res => {
+            this.couponMessage = res;
+            if(this.couponMessage != null && this.couponMessage.notice) {
+                this.presentToast(this.couponMessage.notice)
+            }
             this.getCart();
         }, err => {
             console.log(err);
         });
     }
-
     async addToCart(id, item){
-        console.log(this.data.cart[id]);
-        console.log(item.value.manage_stock);
         if(item.value.manage_stock && (item.value.stock_quantity <= item.value.quantity)) {
             this.presentToast(this.lan.lowQuantity);
         } else {
@@ -170,7 +171,6 @@ export class CartPage {
     async onSubmit(userData) {
         this.loginForm.username = userData.username;
         this.loginForm.password = userData.password;
-        console.log(this.loginForm);
         await this.api.postItem('login', this.loginForm).then(res => {
             this.status = res;
             if (this.status.errors != undefined) {

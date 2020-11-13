@@ -131,7 +131,7 @@
 
     <ion-item style="padding-top: 16px;" lines="none" *ngIf="checkoutData.form.payment_method =='stripe'">
       <ion-label>{{"Use a new Card" | translate}}</ion-label>
-      <ion-checkbox [(ngModel)]="checkoutData.form.card" (ngModelChange)="onUseNewCard()" slot="end"></ion-checkbox>
+      <ion-checkbox color="{{settings.theme.button}}" [(ngModel)]="checkoutData.form.card" (ngModelChange)="onUseNewCard()" slot="end"></ion-checkbox>
     </ion-item>
 
     <div *ngIf="checkoutData.form.payment_method =='stripe'" class="stripe-payment">

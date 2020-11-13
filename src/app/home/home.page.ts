@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, NavController } from '@ionic/angular';
+import { LoadingController, NavController, ModalController, IonRouterOutlet} from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { Data } from '../data';
@@ -13,6 +13,11 @@ import { Config } from '../config';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertController } from '@ionic/angular';
 import { HttpParams } from "@angular/common/http";
+import { Storage } from '@ionic/storage';
+import { LocationPage } from '../location/location.page';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
 
 @Component({
     selector: 'app-home',
@@ -30,19 +35,45 @@ export class HomePage {
     options: any = {};
     lan: any = {};
     variationId: any;
+    get_wishlist:any;
+    loading: any = false;
 
-    constructor(public translate: TranslateService, public alertController: AlertController, private config: Config, public api: ApiService, private splashScreen: SplashScreen, public platform: Platform, public translateService: TranslateService, public data: Data, public settings: Settings, public product: Product, public loadingController: LoadingController, public router: Router, public navCtrl: NavController, public route: ActivatedRoute, private oneSignal: OneSignal, private nativeStorage: NativeStorage) {
+    constructor(public routerOutlet: IonRouterOutlet, public modalCtrl: ModalController, private nativeGeocoder: NativeGeocoder, private geolocation: Geolocation, private locationAccuracy: LocationAccuracy, private storage: Storage, public translate: TranslateService, public alertController: AlertController, private config: Config, public api: ApiService, private splashScreen: SplashScreen, public platform: Platform, public translateService: TranslateService, public data: Data, public settings: Settings, public product: Product, public loadingController: LoadingController, public router: Router, public navCtrl: NavController, public route: ActivatedRoute, private oneSignal: OneSignal, private nativeStorage: NativeStorage) {
         this.filter.page = 1;
         this.filter.status = 'publish';
         this.screenWidth = this.platform.width();
     }
     ngOnInit() {
+
         this.platform.ready().then(() => {
+
+             this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+              if(canRequest) {
+                // the accuracy option will be ignored by iOS
+                this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+                  () => {
+
+                    console.log('Request successful')
+                },
+                  error => {
+                    console.log('Error requesting location permissions', error);
+                });
+              }
+            });
+             // Set language to user preference
             this.nativeStorage.getItem('settings').then((settings : any) => {
                 this.config.lang = settings.lang;
-                this.translateService.setDefaultLang(this.config.lang);
                 document.documentElement.setAttribute('dir', settings.dir);
             }, error => {
+            });
+
+            this.storage.get('userLocation').then((value : any) => {
+                if(value) {
+                    this.api.userLocation = value;
+                }
+                this.getBlocks();
+            }, error => {
+                this.getBlocks();
             });
             this.translate.get(['Oops!', 'Please Select', 'Please wait', 'Options', 'Option', 'Select', 'Item added to cart', 'Message', 'Requested quantity not available'  ]).subscribe(translations => {
               this.lan.oops = translations['Oops!'];
@@ -65,6 +96,8 @@ export class HomePage {
                 this.settings.dimensions = this.data.blocks.dimensions;
                 this.settings.currency = this.data.blocks.settings.currency;
 
+                this.settings.locale = this.data.blocks.locale;
+
                 if(this.data.blocks.languages)
                 this.settings.languages = Object.keys(this.data.blocks.languages).map(i => this.data.blocks.languages[i]);
                 this.settings.currencies = this.data.blocks.currencies;
@@ -73,18 +106,10 @@ export class HomePage {
                 //this.settings.theme = this.data.blocks.theme;
                 this.splashScreen.hide();
             }, error => console.error(error));
+        });
 
-            this.nativeStorage.getItem('settings').then(data => {
-                if(data.lang){
-                    this.config.lang = data.lang;
-                    this.translateService.setDefaultLang(data.lang);
-                    if(data.lang == 'ar'){
-                        document.documentElement.setAttribute('dir', 'rtl');
-                    }
-                }
-            }, error => console.error(error));
-
-            this.getBlocks();
+        window.addEventListener('app:update', (e : any) => {
+          this.getBlocks();
         });
     }
     getCart() {
@@ -96,12 +121,38 @@ export class HomePage {
             console.log(err);
         });
     }
+    async getLocation() {
+        const modal = await this.modalCtrl.create({
+            component: LocationPage,
+            componentProps: {
+                path: 'tabs/home'
+            },
+            swipeToClose: true,
+            presentingElement: this.routerOutlet.nativeEl,
+        });
+        modal.present();
+        const { data } = await modal.onWillDismiss();
+        if(data && data.update) {
+            this.loading = true;
+            this.filter.page = 1;
+            this.getBlocks();
+            console.log(this.api.userLocation);
+            this.storage.set('userLocation', this.api.userLocation);
+        }
+    }
     getBlocks() {
         this.api.postItem('keys').then(res => {
+            this.loading = false;
             this.data.blocks = res;
             if(this.data.blocks && this.data.blocks.user)
             this.settings.user = this.data.blocks.user.data;
+
+            if(this.settings.settings.location_filter == 1 && this.api.userLocation.latitude == 0) {
+                this.getLocation();
+            }
             //this.settings.theme = this.data.blocks.theme;
+            this.settings.locale = this.data.blocks.locale;
+            
             this.settings.pages = this.data.blocks.pages;
             if(this.data.blocks.user)
             this.settings.reward = this.data.blocks.user.data.points_vlaue;
@@ -152,8 +203,9 @@ export class HomePage {
             }
             if (this.data.blocks.user) {
                 this.api.postItem('get_wishlist').then(res => {
-                    for (let item in res) {
-                        this.settings.wishlist[res[item].id] = res[item].id;
+                    this.get_wishlist = res;
+                    for (let item in  this.get_wishlist ) {
+                        this.settings.wishlist[ this.get_wishlist [item].id] =  this.get_wishlist [item].id;
                     }
                 }, err => {
                     console.log(err);
@@ -178,6 +230,14 @@ export class HomePage {
     }
     goto(item) {
         if (item.description == 'category') this.navCtrl.navigateForward('/tabs/home/products/' + item.url);
+        else if (item.description == 'stores') {
+            let navigationExtras = {
+              queryParams: {
+                item: JSON.stringify(item),
+              }
+            };
+            this.navCtrl.navigateForward('/tabs/home/stores', navigationExtras);
+        }
         else if (item.description == 'product') this.navCtrl.navigateForward('/tabs/home/product/' + item.url);
         else if (item.description == 'post') this.navCtrl.navigateForward('/tabs/home/post/' + item.url);
     }
@@ -279,9 +339,6 @@ export class HomePage {
     }
     async updateToCart(product){
         var params: any = {};
-        console.log(product.manage_stock);
-        console.log(product.stock_quantity);
-        console.log(this.data.cart[product.id]);
         if(product.manage_stock && product.stock_quantity < this.data.cart[product.id]) {
             this.presentAlert(this.lan.message, this.lan.lowQuantity);
         } else {

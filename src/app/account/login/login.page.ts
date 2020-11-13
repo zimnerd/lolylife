@@ -5,9 +5,10 @@ import { ApiService } from '../../api.service';
 import { Settings } from './../../data/settings';
 import { FormBuilder, Validators } from '@angular/forms';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
-import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { ForgottenPage } from './../forgotten/forgotten.page';
+//import { GooglePlus } from '@ionic-native/google-plus/ngx';
+//import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
+//import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
 
 @Component({
     selector: 'app-login',
@@ -17,8 +18,11 @@ import { ForgottenPage } from './../forgotten/forgotten.page';
 export class LoginPage implements OnInit {
     @ViewChild('mySlider', {static: false})  slides: IonSlides;
     slideOpts = { autoplay: false, loop: false, lazy: true };
+    icons: any = new Array(60);
+    segment: any = 'login';
     form: any;
     formRegister: any;
+    formSMS: any;
     loginTab: boolean = true;
     path: any = 'account';
     errors: any;
@@ -34,7 +38,16 @@ export class LoginPage implements OnInit {
     userInfo: any;
     phoneVerificationError: any;
     loading: any;
-    constructor(public modalCtrl: ModalController, public navParams: NavParams, public platform: Platform, private oneSignal: OneSignal, public api: ApiService, public settings: Settings, public loadingController: LoadingController, public router: Router, public navCtrl: NavController, private fb: FormBuilder, private googlePlus: GooglePlus, private facebook: Facebook) {
+    constructor(public modalCtrl: ModalController, public navParams: NavParams, public platform: Platform, private oneSignal: OneSignal, public api: ApiService, public settings: Settings, public loadingController: LoadingController, public router: Router, public navCtrl: NavController, private fb: FormBuilder/*, private firebase: FirebaseAuthentication*//*, private googlePlus: GooglePlus, private facebook: Facebook*/) {
+        
+        /*this.firebase.onAuthStateChanged().subscribe((user)=>{
+            if(user){
+                //navigation
+            }else{
+                //
+            }
+        });*/
+
         this.form = this.fb.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
@@ -46,6 +59,12 @@ export class LoginPage implements OnInit {
             phone: ['', Validators.required],
             password: ['', Validators.required],
           });
+        this.formSMS = this.fb.group({
+            country_code: ['+91', Validators.required],
+            phone: ['', Validators.required],
+            sms: ['', Validators.required],
+            phoneVerificationID: ['', Validators.required],
+          });
     }
     close(status) {
         this.modalCtrl.dismiss({
@@ -55,7 +74,14 @@ export class LoginPage implements OnInit {
     ngOnInit() {
         this.path = this.navParams.data.path;
     }
-    async onSubmit() {
+    onSubmit() {
+        if(this.form.valid) {
+            this.loginWithUsername();
+        } else if(this.formSMS.valid) {
+            this.verify();
+        }
+    }
+    async loginWithUsername() {
         this.disableSubmit = true;
         await this.api.postItem('login', this.form.value).then(res => {
             this.status = res;
@@ -101,9 +127,37 @@ export class LoginPage implements OnInit {
           });
           modal.present();
           const { data } = await modal.onWillDismiss();
-        //this.navCtrl.navigateForward('/tabs/account/login/forgotten');
+        //this.navCtrl.navigateForward('/app/tabs/account/login/forgotten');
     }
-    googleLogin(){
+    sendCode(){
+        /*this.platform.ready().then(()=>{
+            if(this.platform.is('hybrid')){
+                this.firebase.verifyPhoneNumber(this.formSMS.value.country_code + this.formSMS.value.phone, 3000).then((verificationID) => {
+                    this.formSMS.patchValue({
+                      phoneVerificationID: verificationID, // or whatever fields you have
+                    });
+                }).catch((error) => {
+                    this.errors = {"blocked_user":["Blocked due to unusal activity. Try again later"]};
+                    console.log(error);
+                });
+            }
+        });*/
+    }
+    verify(){
+        this.disableSubmit = true;
+        /*this.platform.ready().then(() => {
+            if(this.platform.is('hybrid')) {
+                this.firebase.signInWithVerificationId(this.formSMS.value.phoneVerificationID, this.formSMS.value.sms.toString()).then((user) => {
+                    this.handlePhoneLogin();
+                }).catch((error) => {
+                    this.disableSubmit = false;
+                    this.errors = {"invalid_otp":["Invalid SMS Code"]};
+                    console.log(error);
+                });
+            }
+        });*/
+    }
+    /*googleLogin(){
         this.googleLogingInn = true;
         this.presentLoading();
         this.googlePlus.login({})
@@ -150,8 +204,8 @@ export class LoginPage implements OnInit {
             this.googleLogingInn = false;
             this.dismissLoading();
         });
-    }
-    facebookLogin(){
+    }*/
+    /*facebookLogin(){
         this.facebookLogingInn = true;
         this.facebook.login(['public_profile', 'email'])
         .then((res: FacebookLoginResponse) => {
@@ -193,49 +247,38 @@ export class LoginPage implements OnInit {
             this.facebookLogingInn = false;
             this.dismissLoading();
         });
-    }
-    loginWithPhone(){
-        this.phoneLogingInn = true;
-        (<any>window).AccountKitPlugin.loginWithPhoneNumber({
-            useAccessToken: true,
-            defaultCountryCode: "IN",
-            facebookNotificationsEnabled: true,
-          }, data => {
-          (<any>window).AccountKitPlugin.getAccount(
-            info => this.handlePhoneLogin(info),
-            err => this.handlePhoneLogin(err));
-          });
-    }
-    handlePhoneLogin(info){
-        if(info.phoneNumber) {
-            this.api.postItem('phone_number_login', {
-                    "phone": info.phoneNumber,
-                }).then(res => {
-                this.status = res;
-                if (this.status.errors) {
-                    this.errors = this.status.errors;
-                } else if (this.status.data) {
-                    this.settings.customer.id = this.status.ID;
-                     if (this.platform.is('cordova')){
-                        this.oneSignal.getIds().then((data: any) => {
-                            this.form.onesignal_user_id = data.userId;
-                            this.form.onesignal_push_token = data.pushToken;
-                        });
-                       this.api.postItem('update_user_notification', this.form).then(res =>{});
-                     }
-                    if(this.status.allcaps.wc_product_vendors_admin_vendor || this.status.allcaps.dc_vendor || this.status.allcaps.seller || this.status.allcaps.wcfm_vendor){
-                        this.settings.vendor = true;
-                    }
-                    if(this.status.allcaps.administrator) {
-                        this.settings.administrator = true;
-                    }
-                    this.close(true);
+    }*/
+    handlePhoneLogin(){
+        this.disableSubmit = true;
+        this.api.postItem('phone_number_login', {
+                "phone": this.formSMS.value.country_code + this.formSMS.value.phone.toString(),
+            }).then(res => {
+            this.disableSubmit = false;
+            this.status = res;
+            if (this.status.errors) {
+                this.errors = this.status.errors;
+            } else if (this.status.data) {
+                this.settings.customer.id = this.status.ID;
+                 if (this.platform.is('cordova')){
+                    this.oneSignal.getIds().then((data: any) => {
+                        this.form.onesignal_user_id = data.userId;
+                        this.form.onesignal_push_token = data.pushToken;
+                    });
+                   this.api.postItem('update_user_notification', this.form).then(res =>{});
+                 }
+                if(this.status.allcaps.wc_product_vendors_admin_vendor || this.status.allcaps.dc_vendor || this.status.allcaps.seller || this.status.allcaps.wcfm_vendor){
+                    this.settings.vendor = true;
                 }
-                this.phoneLogingInn = false;
-            }, err => {
-                this.phoneLogingInn = false;
-            });
-        } else this.phoneLogingInn = false;
+                if(this.status.allcaps.administrator) {
+                    this.settings.administrator = true;
+                }
+                this.close(true);
+            }
+            this.phoneLogingInn = false;
+        }, err => {
+            this.disableSubmit = false;
+            this.phoneLogingInn = false;
+        });
     }
     handlePhoneLoginError(error){
         this.phoneVerificationError = error;
@@ -282,5 +325,8 @@ export class LoginPage implements OnInit {
         if(this.loading) {
             this.loading.dismiss();
         }
+    }
+    segmentChanged(event) {
+      this.segment = event.detail.value;
     }
 }

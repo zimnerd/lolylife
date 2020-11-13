@@ -31,7 +31,6 @@ export class PhotosPage implements OnInit {
   }
 
   picker() {
-      
       let options = {
           maximumImagesCount: 1,
       }

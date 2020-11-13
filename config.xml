@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.mstoreapp.woogrocery" version="0.0.8" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Quick Order</name>
-    <description>An awesome Mobile app for WooCommerce Grocery and Restaurant.</description>
-    <author email="support@mstoreapp.com" href="https://mstoreapp.com/">Mstoreapp Team</author>
+<widget id="org.holylifeministriesint.lifeapp" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Life App</name>
+    <description>Holy Life Ministries App.</description>
+    <author email="info@holylifeministriesint.org" href="https://holylifeministriesint.org/">Holy life ministries</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://localhost:8080/*" />
@@ -25,6 +25,8 @@
     <preference name="StatusBarBackgroundColor" value="#ffffff" />
     <preference name="StatusBarStyle" value="blackopaque" />
     <preference name="Orientation" value="portrait" />
+    <preference name="WKWebViewOnly" value="true" />
+    <preference name="YouTubeDataApiKey" value="AIzaSyCFzxhusAXpBUeczr0hgkCsm9yLruMiE_w" />
     <platform name="android">
         <hook src="hooks/copy_android_notification_icons.js" type="after_prepare" />
         <allow-intent href="market:*" />
@@ -116,14 +118,9 @@
     <plugin name="onesignal-cordova-plugin" spec="~2.8.3" />
     <plugin name="cordova-plugin-apprate" spec="~1.5.0" />
     <plugin name="cordova-plugin-appminimize" spec="~1.0.1" />
-    <plugin name="cordova-plugin-facebook4" spec="^6.3.0">
-        <variable name="APP_ID" value="2133337676792780" />
-        <variable name="APP_NAME" value="woocommerce app" />
-    </plugin>
     <plugin name="cordova-plugin-whitelist" spec="~1.3.3" />
     <plugin name="cordova-plugin-device" spec="~2.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="~5.0.2" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-advanced-http" spec="~2.4.1" />
     <plugin name="cordova-plugin-googleplus" spec="~8.4.0">

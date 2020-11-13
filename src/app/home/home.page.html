@@ -1,8 +1,19 @@
 <ion-header mode='ios' >
   <ion-toolbar>
-    <ion-title style="text-align: center; letter-spacing: 1.8px;">
-        SUPER STORE
-      <!--img src="assets/image/logo.png"-->
+   <div *ngIf="settings.settings.location_filter == 1">
+      <ion-chip color="primary" *ngIf="api.userLocation.latitude" (click)="getLocation()">
+        <ion-label>{{api.userLocation.address}}</ion-label>
+        <ion-icon name="location-outline"></ion-icon>
+      </ion-chip>
+      <ion-chip color="primary" *ngIf="!api.userLocation.latitude" (click)="getLocation()">
+        <ion-label>{{"Select your address" | translate}}</ion-label>
+        <ion-icon name="location-outline"></ion-icon>
+      </ion-chip>
+    </div>
+
+    <ion-title *ngIf="settings.settings.location_filter == 0" style="text-align: center;" class="logo-title">
+       {{"HOLY LIFE MINISTRIES" | translate}}
+      <!--img src="assets/image/logo.png" style="width: 50px;height: auto;"-->
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,6 +24,11 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
+    <div class="spinner" *ngIf="!data.blocks?.blocks || loading"><ion-spinner> </ion-spinner></div>
+
+
+<div *ngIf="data.blocks?.settings && !loading && (data.blocks.recentProducts.length || data.blocks.categories.length) && (!data.blocks.settings.location_filter || (data.blocks.settings.location_filter == 1 && api.userLocation.latitude != 0))">
+
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="settings.settings?.enable_home_chat">
         <a href="https://wa.me/{{settings.settings?.whatsapp_number}}">
             <ion-fab-button size="small" color="whatsapp">
@@ -21,10 +37,7 @@
         </a>
     </ion-fab>
 
-    <div class="spinner" *ngIf="!data.blocks?.blocks"><ion-spinner> </ion-spinner></div>
-
-
-<div *ngFor="let children of data.blocks?.blocks" hideWhen="loading" class="blocks">
+  <div *ngFor="let children of data.blocks?.blocks" hideWhen="loading" class="blocks">
 
         <div *ngIf="children.block_type == 'banner_block'" [style.background-color]="children.bg_color != '#FFFFFF' ? children.bg_color : 'unset'" [style.margin]="children.margin" [style.padding]="children.padding" class="banner_block">
 
@@ -50,7 +63,7 @@
                         <img src="{{image.image}}" (click)="goto(image)" [style.border-radius]="children.border_radius" class="{{children.card_style}}  {{children.banner_shadow}} ion-activatable ion-focusable hydrated">
                     </ion-col>
                 </ion-row>
-            </div>  
+            </div>
 
         </div>
 
@@ -73,7 +86,7 @@
             </ion-button>
             <ion-button style="--border-radius: 0;" mode="ios" size="small" color="dark">
             {{children.seconds}}
-            </ion-button>                                 
+            </ion-button>
         </div>
 
 
@@ -387,5 +400,21 @@
       loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+</div>
+
+    <div class="no-service" *ngIf="!loading && settings.settings && settings.settings.location_filter == 1">
+      <ion-label *ngIf="data.blocks && (!data.blocks.recentProducts.length && !data.blocks.categories.length)">
+        <ion-icon color="medium" name="location-outline"></ion-icon>
+        <h2>Sorry, Service is not available in your city. we will be there soon!</h2>
+        <ion-button mode="md" color="{{settings.theme.button}}" expand="block" fill="solid" (click)="getLocation()">{{"Address" | translate}}</ion-button>
+      </ion-label>
+
+      <!--ion-label *ngIf="api.userLocation.latitude == 0">
+        <ion-icon color="medium" name="location-outline"></ion-icon>
+        <h2>Please choose your address!</h2>
+        <ion-button mode="md" color="{{settings.theme.button}}" expand="block" fill="solid" (click)="getLocation()">{{"Address" | translate}}</ion-button>
+      </ion-label-->
+    </div>
   
 </ion-content>

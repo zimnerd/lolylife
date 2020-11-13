@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./order.page.scss'],
 })
 export class OrderPage implements OnInit {
-    id: any;
+    filter: any = {};
     order: any;
     refundKeys: any = {};
     refund: any = {};
@@ -34,9 +34,11 @@ export class OrderPage implements OnInit {
             this.lan.refund = translations['Refund request submitted!'];
             this.lan.unable = translations['Unable to submit the refund request'];
         });
-        this.id = this.route.snapshot.paramMap.get('id');
+        this.filter.id = this.route.snapshot.paramMap.get('id');
         this.route.queryParams.subscribe(params => {
+            if(params["order"])
             this.order = params["order"];
+            else this.getOrder();
         });
         this.refundKey();
     }
@@ -47,7 +49,7 @@ export class OrderPage implements OnInit {
 
     async requestRefund(){
         this.disableRefundButton = true;
-        this.refund.ywcars_form_order_id = this.id;
+        this.refund.ywcars_form_order_id = this.filter.id;
         this.refund.ywcars_form_whole_order = '1';
         this.refund.ywcars_form_product_id = '';
 
@@ -74,5 +76,21 @@ export class OrderPage implements OnInit {
           duration: 2000
         });
         toast.present();
+    }
+    async getOrder() {
+        const loading = await this.loadingController.create({
+            message: 'Loading...',
+            translucent: true,
+            animated: true,
+            backdropDismiss: true
+        });
+        await loading.present();
+        await this.api.postItem('order', this.filter).then(res => {
+            this.order = res;
+            loading.dismiss();
+        }, err => {
+            console.log(err);
+            loading.dismiss();
+        });
     }
 }

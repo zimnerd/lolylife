@@ -23,8 +23,8 @@ export class BlogPage implements OnInit {
         this.getPost();
         this.getComments();
     }
-    async getPost() {
-        await this.api.getPosts('/index.php/wp-json/wp/v2/posts/'+ this.id +'?_embed').then(res => {
+    async getPost(post ='posts') {
+        await this.api.getPosts('/wp-json/wp/v2/'+post+'/'+ this.id +'?_embed').then(res => {
             this.post.post = res;
         }, err => {
             console.log(err);
@@ -34,7 +34,7 @@ export class BlogPage implements OnInit {
         this.post.post = {};
     }
     getComments() {
-        this.api.getPosts('/index.php/wp-json/wp/v2/comments?post='+ this.id + '&page=' + this.commentFilter.page).then(res => {
+        this.api.getPosts('/wp-json/wp/v2/comments?post='+ this.id + '&page=' + this.commentFilter.page).then(res => {
             this.comments = res;
         }, err => {
             console.log(err);
@@ -42,7 +42,7 @@ export class BlogPage implements OnInit {
     }
     async getMoreComments(event) {
         this.commentFilter.page = this.commentFilter.page + 1;
-        this.api.getPosts('/index.php/wp-json/wp/v2/comments?post='+ this.id + '&page=' + this.commentFilter.page).then(res => {
+        this.api.getPosts('/wp-json/wp/v2/comments?post='+ this.id + '&page=' + this.commentFilter.page).then(res => {
             this.results = res;
             this.comments.push.apply(this.comments, this.results);
             event.target.complete();

@@ -167,7 +167,7 @@
           </ion-row>
          </ion-col>
          </ion-row>
-         <ion-row class="ion-align-items-center ion-justify-content-center" *ngIf="product.type != 'variable'">
+         <ion-row class="ion-align-items-center ion-justify-content-center" *ngIf="product.type == 'simple'">
          <ion-col *ngIf="data.cart[product.id] == undefined || data.cart[product.id] == 0">
                 <ion-button style="--border-radius: 64px 64px 64px 64px;" mode="ios" expand="block" color="{{settings.theme.button}}" [disabled]="product.stock_status == 'outofstock'" (click)="addToCart(product)">
                   {{product.stock_status == 'outofstock' ? "No Stock" : "ADD"  | translate}}

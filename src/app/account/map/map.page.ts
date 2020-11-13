@@ -1,9 +1,9 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { Settings } from './../../data/settings';
+import { Settings } from '../../data/settings';
 import { ApiService } from '../../api.service';
 
-declare var wkWebView: any;
+// declare var wkWebView: any;
 
 @Component({
     selector: 'page-map',

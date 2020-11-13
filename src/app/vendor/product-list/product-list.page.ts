@@ -105,7 +105,6 @@ export class ProductListPage {
         const alert = await this.alertController.create({
           header: 'Delete',
           message: 'Are you sure you want to delete this product?',
-
           buttons: [{
           text: 'Cancel',
           role: 'cancel',
@@ -116,7 +115,7 @@ export class ProductListPage {
         }, {
           text: 'Delete',
           handler: () => {
-            this.api.deleteItem('products', product.id).then(res => {
+            this.api.deleteItem('products/'+product.id).then(res => {
                 this.getProducts();
             }, err => {
                 console.log(err);
