@@ -380,6 +380,10 @@ const routes: Routes = [
               {
                 path: 'blog/:id',
                 component: BlogPage
+              },
+              {
+                path: 'blog/:id/:url',
+                component: BlogPage
               }
             ]
           },

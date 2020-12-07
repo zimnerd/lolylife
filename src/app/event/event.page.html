@@ -9,6 +9,7 @@
 
 <ion-content fullscreen>
     <ion-card *ngIf="event!= undefined">
+        <h3>{{event.title.rendered}}</h3>
         <img src="{{event.featured_image.size_full}}" *ngIf="event.featured_image.size_full !=''"/>
         <ion-card-header>
             <ion-card-title *ngIf="event.mec_category.length > 0">{{event.mec_category[0].name}}</ion-card-title>

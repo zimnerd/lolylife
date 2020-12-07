@@ -438,16 +438,25 @@ export class ApiService {
     }
   }
 
-  getPosts(endPoint) {
+  getPosts(endPoint, showLoader = true) {
+    if(showLoader){
+      this.presentLoading()
+    }
     const url = this.config.url + endPoint + '&lang=' + this.config.lang;
     if (this.platform.is('ios') && this.platform.is('hybrid')) {
       return new Promise((resolve, reject) => {
         this.ionicHttp.get(url, {}, {})
           .then(data => {
             resolve(JSON.parse(data.data));
+            if(showLoader){
+              this.dismisLoading()
+            }
           })
           .catch(error => {
             reject(JSON.parse(error.error));
+            if(showLoader){
+              this.dismisLoading()
+            }
           });
       });
     } else {
@@ -577,7 +586,7 @@ export class ApiService {
       message,
       showBackdrop: false,
       mode: 'ios',
-      duration: 10000
+      duration: 5000
     });
     await loading.present();
     const {role, data} = await loading.onDidDismiss();

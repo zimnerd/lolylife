@@ -22,5 +22,16 @@ export class YtService {
       });
     });
   }
+  async getFromFile(endpoint): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.get(endpoint
+      ).subscribe(res => {
+        resolve(res);
+      }, (err) => {
+        console.log('ERROR ', endpoint, err);
+        reject(err);
+      });
+    });
+  }
 
 }

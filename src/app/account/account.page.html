@@ -71,6 +71,10 @@
             <ion-icon style="background-color: var(--ion-color-success, #2dd36f); color: white" class="icon-start ion-margin-end" name="logo-whatsapp" slot="start"></ion-icon>
             <ion-label>{{"Whatsapp us" | translate}}</ion-label>
         </ion-item>
+       <ion-item lines="inset" class="ion-activatable" href="https://www.holylifeministriesint.org" detail="true">
+            <ion-icon style="background-color: var(--ion-color-primary, #0d66d0); color: white" class="icon-start ion-margin-end" name="globe-outline" slot="start"></ion-icon>
+            <ion-label>{{"Open Website" | translate}}</ion-label>
+        </ion-item>
         <ion-item (click)="email(settings?.settings?.support_email)" detail="true"  *ngIf="settings?.settings?.support_email" lines="inset" class="ion-activatable">
             <ion-icon style="background-color: var(--ion-color-secondary, #3dc2ff); color: white" class="icon-start ion-margin-end" name="mail" slot="start"></ion-icon>
             <ion-label>{{"Email us" | translate}}</ion-label>
@@ -90,7 +94,11 @@
         </ion-item>
         <ion-item lines="inset" (click)="goTo('tabs/account/blogs')" detail="true"  lines="inset" class="ion-activatable">
           <ion-icon style="background-color: var(--ion-color-primary, #428xff); color: white" class="icon-start ion-margin-end" name="document" slot="start"></ion-icon>
-        <ion-label>{{"Blog" | translate}}</ion-label>
+        <ion-label>{{"Latest news" | translate}}</ion-label>
+        </ion-item>
+        <ion-item lines="inset" (click)="goTo('tabs/media')" detail="true"  lines="inset" class="ion-activatable">
+          <ion-icon style="background-color: var(--ion-color-danger); color: white" class="icon-start ion-margin-end" name="logo-youtube" slot="start"></ion-icon>
+        <ion-label>{{"Sermons" | translate}}</ion-label>
         </ion-item>
         <ion-item lines="inset" (click)="goTo('tabs/events')" detail="true"  lines="inset" class="ion-activatable">
           <ion-icon style="background-color: var(--ion-color-primary, #428xff); color: white" class="icon-start ion-margin-end" name="calendar-outline" slot="start"></ion-icon>

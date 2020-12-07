@@ -109,6 +109,9 @@
         <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
         <splash height="2436" src="resources/ios/splash/Default-2436h.png" width="1125" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
+        <icon height="216" src="resources/ios/icon/icon-108@2x.png" width="216" />
+        <splash height="2688" src="resources/ios/splash/Default-2688h~iphone.png" width="1242" />
+        <splash height="1792" src="resources/ios/splash/Default-1792h~iphone.png" width="828" />
     </platform>
     <plugin name="cordova-plugin-email-composer" spec="~0.9.2" />
     <plugin name="cordova-plugin-x-socialsharing" spec="~5.6.4">
@@ -133,5 +136,4 @@
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This will allow you to add product images" />
     </plugin>
     <plugin name="cordova-plugin-nativestorage" spec="~2.3.2" />
-    <plugin name="cordova-plugin-inappbrowser" spec="~3.2.0" />
 </widget>

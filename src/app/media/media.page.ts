@@ -16,6 +16,7 @@ import {OneSignal} from '@ionic-native/onesignal/ngx';
 import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {YtService} from '../yt.service';
 import {YoutubeVideoPlayer} from '@ionic-native/youtube-video-player/ngx';
+import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-media',
@@ -29,11 +30,30 @@ export class MediaPage implements OnInit {
   videos;
   nextpageToken;
   prevpageToken;
+  option: InAppBrowserOptions = {
+    location: 'yes',//Or 'no'
+    hidden: 'no', //Or  'yes'
+    clearcache: 'yes',
+    clearsessioncache: 'yes',
+    zoom: 'yes',//Android only ,shows browser zoom controls
+    hardwareback: 'yes',
+    mediaPlaybackRequiresUserAction: 'no',
+    shouldPauseOnSuspend: 'no', //Android only
+    closebuttoncaption: 'Close', //iOS only
+    disallowoverscroll: 'no', //iOS only
+    toolbar: 'yes', //iOS only
+    enableViewportScale: 'no', //iOS only
+    allowInlineMediaPlayback: 'no',//iOS only
+    presentationstyle: 'pagesheet',//iOS only
+    fullscreen: 'yes',//Windows only
+  };
 
-  constructor(public routerOutlet: IonRouterOutlet, private youtube: YoutubeVideoPlayer, private plt: Platform, public yt: YtService, public modalCtrl: ModalController, private nativeGeocoder: NativeGeocoder, private geolocation: Geolocation, private locationAccuracy: LocationAccuracy, private storage: Storage, public translate: TranslateService, public alertController: AlertController, private config: Config, public api: ApiService, private splashScreen: SplashScreen, public platform: Platform, public translateService: TranslateService, public data: Data, public settings: Settings, public product: Product, public loadingController: LoadingController, public router: Router, public navCtrl: NavController, public route: ActivatedRoute, private oneSignal: OneSignal, private nativeStorage: NativeStorage) {
+
+  constructor(public routerOutlet: IonRouterOutlet, public iab: InAppBrowser, public apiService: ApiService, private youtube: YoutubeVideoPlayer, private plt: Platform, public yt: YtService, public modalCtrl: ModalController, private nativeGeocoder: NativeGeocoder, private geolocation: Geolocation, private locationAccuracy: LocationAccuracy, private storage: Storage, public translate: TranslateService, public alertController: AlertController, private config: Config, public api: ApiService, private splashScreen: SplashScreen, public platform: Platform, public translateService: TranslateService, public data: Data, public settings: Settings, public product: Product, public loadingController: LoadingController, public router: Router, public navCtrl: NavController, public route: ActivatedRoute, private oneSignal: OneSignal, private nativeStorage: NativeStorage) {
   }
 
   ngOnInit() {
+    this.getVideosForChannel();
   }
 
   getVideosForChannel() {
@@ -41,13 +61,16 @@ export class MediaPage implements OnInit {
     if (this.nextpageToken !== null && this.nextpageToken !== undefined) {
       pageToken = '&pageToken =' + this.nextpageToken;
     }
-    this.yt.get('/search?key=' + this.apiKey + '&channelId=' + this.channel + '&part=snippet,id&order=date&maxResults=50' + pageToken).then((videos) => {
+    this.apiService.presentLoading();
+    this.yt.getFromFile('https://www.holylifeministriesint.org/crons/getYoutubeList.php').then((videos) => {
       console.log(videos);
       this.videos = videos.items;
       this.nextpageToken = videos.nextPageToken;
       this.prevpageToken = videos.prevPageToken;
+      this.apiService.dismisLoading();
     }).catch((err) => {
       console.log('Error::', err);
+      this.apiService.dismisLoading();
     });
   }
 
@@ -71,10 +94,10 @@ export class MediaPage implements OnInit {
   }
 
   openVideo(video) {
-    if (this.plt.is('cordova')) {
+    if (this.plt.is('desktop')) {
       this.youtube.openVideo(video);
     } else {
-      window.open('https://www.youtube.com/watch?v=' + video);
+      this.openLink('https://www.youtube.com/watch?v=' + video);
     }
   }
 
@@ -85,6 +108,11 @@ export class MediaPage implements OnInit {
       }
     };
     this.router.navigate(['playlist'], navigationExtras);
+  }
+
+  openLink(url) {
+    this.iab.create(url, '_system', this.option);
+
   }
 
 }

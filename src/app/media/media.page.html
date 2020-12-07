@@ -5,10 +5,10 @@
 </ion-header>
 
 <ion-content>
-    <ion-button expand="full" (click)="getPlaylistsForChannel()" color="danger">Get Playlists
-    </ion-button>
-    <ion-button expand="full" (click)="getVideosForChannel()" color="danger">Get Videos
-    </ion-button>
+<!--    <ion-button expand="full" (click)="getPlaylistsForChannel()" color="danger">Get Playlists-->
+<!--    </ion-button>-->
+<!--    <ion-button expand="full" (click)="getVideosForChannel()" color="danger">Load Videos-->
+<!--    </ion-button>-->
 
     <ion-list class="ion-no-padding" *ngIf="playlists !== undefined">
         <ion-item *ngFor="let list of playlists" (click)="getListVideos(list.id)">
@@ -32,7 +32,7 @@
 
     <ion-grid *ngIf="videos !== undefined && videos.length > 0">
         <ion-row *ngFor="let video of videos" (click)="openVideo(video.id.videoId)"
-                 [class]="'underline mb-1 ' + (video.liveBroadcastContent == 'none')?'':'live'"
+                 [class]="'underline shadow mb-1 ' + (video.liveBroadcastContent == 'none')?' shadow ':' live '"
                  style="border:1px solid #dedede; border-radius: 5px; margin-bottom: 5px">
             <ion-col size="2">
                 <ion-thumbnail>

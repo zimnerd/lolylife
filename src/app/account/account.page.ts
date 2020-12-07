@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController, Platform, IonRouterOutlet } from '@ionic/angular';
-import { Settings } from './../data/settings';
-import { ApiService } from './../api.service';
+import { Settings } from '../data/settings';
+import { ApiService } from '../api.service';
 import { AppRate } from '@ionic-native/app-rate/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
-import { Config } from './../config';
+import { Config } from '../config';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { LoginPage } from './../account/login/login.page';
+import { LoginPage } from './login/login.page';
 
 @Component({
     selector: 'app-account',

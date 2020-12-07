@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ApiService } from '../../api.service';
-import { Post } from './../../data/post';
-import { Settings } from './../../data/settings';
+2;
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ApiService} from '../../api.service';
+import {Post} from './../../data/post';
+import {Settings} from './../../data/settings';
 
 @Component({
     selector: 'app-blog',
@@ -17,9 +17,14 @@ export class BlogPage implements OnInit {
     commentFilter: any = {page: 1}
     results: any;
     hasMoreItems: boolean = true;
+    backto = '/tabs/account/blogs';
     constructor(public api: ApiService, public router: Router, public post: Post, public settings: Settings, public route: ActivatedRoute) {}
     ngOnInit() {
         this.id = this.route.snapshot.paramMap.get('id');
+
+        if( this.route.snapshot.paramMap.get('url') === 'home'){
+            this.backto = 'tabs/home'
+        }
         this.getPost();
         this.getComments();
     }

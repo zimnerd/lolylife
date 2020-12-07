@@ -10,7 +10,6 @@ import {NativeStorage} from '@ionic-native/native-storage/ngx';
 import {IonicStorageModule} from '@ionic/storage';
 //import { ScrollingModule } from '@angular/cdk/scrolling/ngx';
 //import { DragDropModule } from '@angular/cdk/drag-drop/ngx';
-import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import {AppRate} from '@ionic-native/app-rate/ngx';
 import {AppMinimize} from '@ionic-native/app-minimize/ngx';
@@ -52,6 +51,7 @@ import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {LocationAccuracy} from '@ionic-native/location-accuracy/ngx';
 import {YoutubeVideoPlayer} from '@ionic-native/youtube-video-player/ngx';
 import {YtService} from './yt.service';
+import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 
 //Firebase
 //import { AngularFireModule } from '@angular/fire';
