@@ -440,7 +440,7 @@ export class ApiService {
 
   getPosts(endPoint, showLoader = true) {
     if(showLoader){
-      this.presentLoading()
+      this.presentLoading("Getting posts...")
     }
     const url = this.config.url + endPoint + '&lang=' + this.config.lang;
     if (this.platform.is('ios') && this.platform.is('hybrid')) {

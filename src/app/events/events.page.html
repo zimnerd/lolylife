@@ -6,22 +6,24 @@
 
 <ion-content>
     <ion-list class="stripped">
-        <ion-list-header>
-            Upcoming events
-        </ion-list-header>
-        <ion-item *ngFor="let event of events" detail class="stripped" routerLink="/tabs/event/{{event.id}}" routerDirection="forward">
+        <ion-item *ngFor="let event of events" detail class="stripped" routerLink="/tabs/event/{{event.id}}"
+                  routerDirection="forward">
             <ion-thumbnail slot="start">
                 <img src="{{event.featured_image.size_thumbnail}}">
             </ion-thumbnail>
             <ion-label>
-                <h2>{{event.title.rendered}}</h2>
-                <h3 [innerHTML]="event.excerpt.rendered"></h3>
-                <p *ngIf="event.mec_allday == 0">{{event.mec_start_date |  date }} {{event.mec_start_time_hour}}
-                    :{{event.mec_start_time_minutes }} {{event.mec_start_time_ampm}} - {{event.mec_end_date |  date }} {{event.mec_end_time_hour}}
-                    :{{ event.mec_end_time_minutes }} {{event.mec_end_time_ampm}}</p>
+                <h3 class="ion-text-wrap ion-wrap" [innerHTML]="event.title.rendered"></h3>
+                <h4 class="ion-text-wrap ion-wrap" [innerHTML]="event.excerpt.rendered"></h4>
+                <p><small
+                        *ngIf="event.mec_allday == 0"><strong>Start: </strong>{{event.mec_start_date }} {{event.mec_start_time_hour}}
+                    {{(event.mec_start_time_minutes == 0) ? '' : ':' + event.mec_start_time_minutes }}{{event.mec_start_time_ampm}}
+                </small></p>
+                <p><small *ngIf="event.mec_allday == 0"><strong>End: </strong>{{event.mec_end_date  }}
+                    @{{event.mec_end_time_hour}}
+                    {{ (event.mec_end_time_minutes == 0) ? '' : ':' + event.mec_end_time_minutes }}{{event.mec_end_time_ampm}}
+                </small></p>
                 <ion-badge color="success" *ngIf="event.mec_allday!= 0"> All day</ion-badge>
             </ion-label>
-
         </ion-item>
     </ion-list>
 </ion-content>

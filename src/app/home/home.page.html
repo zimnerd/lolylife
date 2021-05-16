@@ -596,21 +596,27 @@
             </ion-button>
         </ion-col>
         <hr>
-        <ion-col size="6" *ngFor="let event of events; let i = index" class="stripped"
+        <ion-col [size]="(events.length < 2)?12:6" sizeXl *ngFor="let event of events; let i = index" class="stripped"
                  routerLink="/tabs/event/{{event.id}}"
                  routerDirection="forward">
             <ion-card>
                 <ion-card-header color="medium">
-                    <ion-card-title>{{event.title.rendered}}</ion-card-title>
+                    <ion-card-title [innerHTML]="event.title.rendered"
+                                    class="ion-padding-horizontal ion-text-wrap"></ion-card-title>
                 </ion-card-header>
-                <ion-card-content class="ion-padding" style="padding: 10px !important;">
-
+                <ion-card-content class="ion-padding-horizontal" style="padding: 10px !important;">
                     <img src="{{event.featured_image.size_full}}" width="100%">
                     <h3 [innerHTML]="event.excerpt.rendered"></h3>
-                    <small *ngIf="event.mec_allday == 0">{{event.mec_start_date |  date }} {{event.mec_start_time_hour}}
-                        :{{event.mec_start_time_minutes }} {{event.mec_start_time_ampm}}
-                        - {{event.mec_end_date |  date }} {{event.mec_end_time_hour}}
-                        :{{ event.mec_end_time_minutes }} {{event.mec_end_time_ampm}}</small>
+                    <p><small
+                            *ngIf="event.mec_allday == 0"><strong>Start: </strong>{{event.mec_start_date  }}
+                        @{{event.mec_start_time_hour}}
+                        {{(event.mec_start_time_minutes == 0) ? '' : ':' + event.mec_start_time_minutes}}{{event.mec_start_time_ampm}}
+                    </small></p>
+                    <p><small
+                            *ngIf="event.mec_allday == 0"><strong>End: </strong>{{event.mec_end_date  }}
+                        @{{event.mec_end_time_hour}}
+                        {{ (event.mec_end_time_minutes == 0) ? '' : ':' + event.mec_end_time_minutes }}{{event.mec_end_time_ampm}}
+                    </small></p>
                     <ion-badge color="success" *ngIf="event.mec_allday!= 0"> All day</ion-badge>
                 </ion-card-content>
             </ion-card>

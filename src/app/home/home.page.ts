@@ -130,13 +130,19 @@ export class HomePage {
         //this.settings.theme = this.data.blocks.theme;
         this.splashScreen.hide();
       }, error => console.error(error));
+      this.getPosts();
     });
 
     window.addEventListener('app:update', (e: any) => {
       this.getBlocks();
     });
 
-    this.getPosts();
+  }
+
+  ionViewDidEnter() {
+    this.platform.ready().then(() => {
+      this.getPosts();
+    });
   }
 
   getEvents() {
@@ -381,15 +387,17 @@ export class HomePage {
     this.oneSignal.endInit();
   }
 
-  doRefresh(event) {
+  doRefresh(event = null) {
     this.filter.page = 1;
     //this.getBlocks();
-    this.getPosts();
     this.getEvents();
     this.getBlocks();
-    setTimeout(() => {
-      event.target.complete();
-    }, 2000);
+    this.getPosts();
+    if (event !== null) {
+      setTimeout(() => {
+        event.target.complete();
+      }, 2000);
+    }
   }
 
   getHeight(child) {
